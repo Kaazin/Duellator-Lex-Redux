@@ -35,9 +35,13 @@ public class PlayerMovement : MonoBehaviour
 
     public enum fallSpd {floaty, normal, fastfaller};
 
-    public fallSpd fallRate;
+    public fallSpd fallRate;    //enum variable of fallspeed
 
     public float floaty, normal, fast;  //the three possible fall speeds a character can have
+
+    RaycastHit hit;
+
+    public bool IsGrounded;
     void Awake()
     {
         //assign defualt speed to normSpeed
@@ -66,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
         else
             gravity *= normal;
 
+
     }
 
     void Update()
@@ -77,11 +82,11 @@ public class PlayerMovement : MonoBehaviour
 
         //assign the player's rotation
         //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 1);
-                           
+
         //assign newPos and movement
         newPos = transform.position;
         Vector3 movement = (newPos - prevPos);
- 
+
         // get player input on the horizontal axis and set it to a variable
         float moveH = Input.GetAxis("Horizontal") * speed;
 
@@ -107,35 +112,19 @@ public class PlayerMovement : MonoBehaviour
         //make the player move toward the direction vector relative to his rotation
         rb.velocity = transform.rotation * direction;
 
-        //if the player is grounded and presses the jump button
-        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
-            //make him jump
-            Jump();
-        
-        //if he isn't ground
-        if(!IsGrounded())
-        {
 
+        if(IsGrounded && Input.GetKeyDown(KeyCode.Space))
+        {
+            anim.SetBool("Jump", true);
+            StartCoroutine(Jump());
+        }
+
+        if (!IsGrounded)
             direction.y -= gravity;
-
-            
-
-            //set the speed to airSpeed
-
-            speed = airSpeed;
-        }
-
-        //if the player is grounded
-        if(IsGrounded())
-        {
-          //  if(direction.y < 0)
-            //stop applying gravity
-           // direction.y = 0;
-
-            //set his speed to normal speed
-            speed = normSpeed;
-
-        }
+        else if (direction.y < 0)
+            direction.y = 0;
+        if (!IsGrounded)
+            anim.SetBool("Jump", false);
     }
 
     void LateUpdate()
@@ -145,19 +134,45 @@ public class PlayerMovement : MonoBehaviour
         fwd = transform.forward;
     }
 
-    bool IsGrounded()
+    void OnCollisionEnter(Collision col)
     {
-        //return a downward raycast if it hits the player is grounded
-        return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
+
+        if (col.gameObject.name == "Floor")
+        {
+            IsGrounded = true;
+            anim.SetBool("Jump", false);
+            anim.SetBool("Land", true);
+            //anim.SetBool("Land", false);
+
+        }
+    }
+
+	void OnCollisionStay(Collision col)
+	{
+        if(col.gameObject.name == "Floor")
+        {
+        }
+                   
+	}
+	void OnCollisionExit(Collision col)
+    {
+
+        if (col.gameObject.name == "Floor")
+        {
+            IsGrounded = false;
+            anim.SetBool("Land", false);
+
+        }
 
     }
 
-    public void Jump()
+    IEnumerator Jump()
     {
-        //add direction.y to jumpspeed
+        yield return new WaitForSeconds(.5f);
         direction.y = jumpSpeed;
-        
+
     }
 
-   
+
+
 }
