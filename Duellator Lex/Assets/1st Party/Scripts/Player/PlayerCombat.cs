@@ -13,35 +13,49 @@ public class PlayerCombat : MonoBehaviour
 	
 	void Update () 
     {
-        if (Input.GetKeyDown(KeyCode.Z) && Input.GetAxis("Vertical") == 0
-            && Input.GetAxis("Horizontal") == 0)
+        transform.localPosition = Vector3.zero;
+
+        if (Input.GetButtonDown("Primary 1")&& Input.GetAxis("Vertical") == 0
+            && Input.GetAxis("Horizontal") == 0 && !Input.GetButton("Special"))
             anim.SetBool("Primary1", true);
         else
             anim.SetBool("Primary1", false);
         
       
 
-        if (Input.GetKeyDown(KeyCode.X) && Input.GetAxis("Vertical") == 0
-            && Input.GetAxis("Horizontal") == 0)
+        if (Input.GetButtonDown("Primary 2") && Input.GetAxis("Vertical") == 0
+            && Input.GetAxis("Horizontal") == 0 && !Input.GetButton("Special"))
             anim.SetBool("Primary2", true);
         else
             anim.SetBool("Primary2", false);
         
 
 
-        if (Input.GetKeyDown(KeyCode.C )&& Input.GetAxis("Vertical") == 0
-            && Input.GetAxis("Horizontal") == 0)
+        if (Input.GetButtonDown("Secondary 1")&& Input.GetAxis("Vertical") == 0
+            && Input.GetAxis("Horizontal") == 0 && !Input.GetButton("Special"))
             anim.SetBool("Secondary1", true);
         else
             anim.SetBool("Secondary1", false);
 
 
 
-        if (Input.GetKeyDown(KeyCode.V) && Input.GetAxis("Vertical") == 0
-            && Input.GetAxis("Horizontal") == 0)
+        if (Input.GetButtonDown("Secondary 2") && Input.GetAxis("Vertical") == 0
+            && Input.GetAxis("Horizontal") == 0 && !Input.GetButton("Special"))
             anim.SetBool("Secondary2", true);
         else
-            anim.SetBool("Secondary2", false);
+            anim.SetBool("Secondary2", false); 
+
+        if ((Input.GetButtonDown("Primary 1") || Input.GetButtonDown("Primary 2")) && Input.GetButton("Special") &&
+            Input.GetAxis("Vertical") == 0 && Input.GetAxis("Horizontal") == 0)
+            anim.SetBool("Special1", true);
+        else
+            anim.SetBool("Special1", false);
+
+        if ((Input.GetButtonDown("Secondary 1") || Input.GetButtonDown("Secondary 2")) && Input.GetButton("Special") &&
+            Input.GetAxis("Vertical") == 0 && Input.GetAxis("Horizontal") == 0)
+            anim.SetBool("Special2", true);
+        else
+            anim.SetBool("Special2", false);
 
 
 	}

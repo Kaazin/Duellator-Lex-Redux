@@ -113,7 +113,7 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = transform.rotation * direction;
 
 
-        if(IsGrounded && Input.GetKeyDown(KeyCode.Space))
+        if(IsGrounded && Input.GetButtonDown("Jump"))
         {
             anim.SetBool("Jump", true);
             StartCoroutine(Jump());
