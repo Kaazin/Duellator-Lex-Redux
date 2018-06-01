@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-
+    public int PartnerID = 1;
     public Vector3 direction;  //the player's direction of movment
 
     public float speed;        //the speed at which the player should move

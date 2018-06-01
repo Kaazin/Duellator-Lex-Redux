@@ -9,15 +9,21 @@ public class FighterSwitch : MonoBehaviour
     public float SwitchTime;    //delay between each fighter switch
     public int StartingFighter;
     public bool StartComet;
-    ParticleSystem switchFX;    //particle effect for switching characters
+    ParticleSystem switchFX;    //particle effect for switching character
+    public int currentFighterIndex = 0;
 	void Awake ()
     {
         //turn off the first fighters and setup the references
         if (StartComet)
+        {
             fighters[1].SetActive(false);
+            currentFighterIndex = 0;
+        }
         else
+        {
             fighters[0].SetActive(false);
-
+            currentFighterIndex = 1;
+        }
         switchFX = GetComponentInChildren<ParticleSystem>();
 
 	}
@@ -34,23 +40,28 @@ public class FighterSwitch : MonoBehaviour
     IEnumerator SwitchFighters(float time)
     {
         //if the first fighter is active play the effect and switch to the second after the delay of time
-        if (fighters[0].activeSelf)
-        {
-            switchFX.Stop();
-            switchFX.Play();
-            yield return new WaitForSeconds(time);
-            fighters[1].SetActive(true);
-            fighters[0].SetActive(false);
-        }
-
-        //if hte second fighter is active play the effect and switch to the first after the delay of time
-        else if (fighters[1].activeSelf)
+        if (fighters[1].activeSelf)
         {
             switchFX.Stop();
             switchFX.Play();
             yield return new WaitForSeconds(time);
             fighters[0].SetActive(true);
             fighters[1].SetActive(false);
+            currentFighterIndex = 0;
+
+
+        }
+
+        //if hte second fighter is active play the effect and switch to the first after the delay of time
+        else if (fighters[0].activeSelf)
+        {
+            switchFX.Stop();
+            switchFX.Play();
+            yield return new WaitForSeconds(time);
+            fighters[1].SetActive(true);
+            fighters[0].SetActive(false);
+            currentFighterIndex = 1;
+
         }
     }
 }

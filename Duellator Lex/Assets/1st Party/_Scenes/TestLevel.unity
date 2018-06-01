@@ -337,6 +337,38 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2b15fffb2850e448293a3d889001ec58, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &577539982 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1249140223550286, guid: 57532a31c67d34227985a4e7b8a345fe,
+    type: 2}
+  m_PrefabInternal: {fileID: 1747690441}
+--- !u!114 &577539983 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114174970564963612, guid: 57532a31c67d34227985a4e7b8a345fe,
+    type: 2}
+  m_PrefabInternal: {fileID: 1747690441}
+  m_Script: {fileID: 11500000, guid: 92e59c679591e40f687209e18a8ea3c3, type: 3}
+--- !u!114 &577539985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 577539982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a80149d6413c428c973571b04b75d50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 10
+  currentHealth: 10
+  time: 1
+  multiplier: 0.5
+  isDead: 0
+  duo: 1
+  fighters:
+  - {fileID: 0}
+  - {fileID: 0}
+  fSwitch: {fileID: 577539983}
 --- !u!1 &751151651 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1314833585852460, guid: 2b15fffb2850e448293a3d889001ec58,
@@ -439,6 +471,19 @@ Prefab:
     - target: {fileID: 1883394575321912, guid: 57532a31c67d34227985a4e7b8a345fe, type: 2}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114174970564963612, guid: 57532a31c67d34227985a4e7b8a345fe,
+        type: 2}
+      propertyPath: StartComet
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1012480938475480, guid: 57532a31c67d34227985a4e7b8a345fe, type: 2}
+      propertyPath: m_Name
+      value: KoraMesh
+      objectReference: {fileID: 0}
+    - target: {fileID: 1795525376914758, guid: 57532a31c67d34227985a4e7b8a345fe, type: 2}
+      propertyPath: m_Name
+      value: CometMesh
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 57532a31c67d34227985a4e7b8a345fe, type: 2}
