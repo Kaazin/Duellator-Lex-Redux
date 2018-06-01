@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float jumpSpeed;   //the speed the player should Jump
 
+
     Rigidbody rb;       //the rigidbody attached to the player
 
     Animator anim;      //the animator attached to the player
@@ -39,8 +40,11 @@ public class PlayerMovement : MonoBehaviour
 
     public float floaty, normal, fast;  //the three possible fall speeds a character can have
 
+    public bool controlsReversed;
+
     RaycastHit hit;
 
+    public float time = 0.5f;
     public bool IsGrounded;
     void Awake()
     {
@@ -52,6 +56,7 @@ public class PlayerMovement : MonoBehaviour
 
         //set up the references
         rb = GetComponent<Rigidbody>();
+
         anim = GetComponentInChildren<Animator>();
 
         boxCol = GetComponent<BoxCollider>();
@@ -75,6 +80,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+
         //the distance between the player and the enemy
         //Vector3 dir = enemy.position - transform.position;
         //zero out the vector's Y value
@@ -112,19 +118,21 @@ public class PlayerMovement : MonoBehaviour
         //make the player move toward the direction vector relative to his rotation
         rb.velocity = transform.rotation * direction;
 
-
         if(IsGrounded && Input.GetButtonDown("Jump"))
         {
             anim.SetBool("Jump", true);
-            StartCoroutine(Jump());
+            StartCoroutine(Jump(time));
         }
 
+        //if the player isn't grouned add gravity and go away from the jump animation
         if (!IsGrounded)
+        {
             direction.y -= gravity;
+            anim.SetBool("Jump", false);
+        }
+        // if the player's vertical direction is less than zero reset him at zero
         else if (direction.y < 0)
             direction.y = 0;
-        if (!IsGrounded)
-            anim.SetBool("Jump", false);
     }
 
     void LateUpdate()
@@ -136,7 +144,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnCollisionEnter(Collision col)
     {
-
+        //if we collide with the floor we should be grounded
         if (col.gameObject.name == "Floor")
         {
             IsGrounded = true;
@@ -156,7 +164,7 @@ public class PlayerMovement : MonoBehaviour
 	}
 	void OnCollisionExit(Collision col)
     {
-
+        //when we leave the floor wea re no longer grounded
         if (col.gameObject.name == "Floor")
         {
             IsGrounded = false;
@@ -165,10 +173,12 @@ public class PlayerMovement : MonoBehaviour
         }
 
     }
+    //delay for a time to allow the jump animation to play through untilt hte player leaves the ground
+    //once the time has passed jump
 
-    IEnumerator Jump()
+    IEnumerator Jump(float time)
     {
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(time);
         direction.y = jumpSpeed;
 
     }
