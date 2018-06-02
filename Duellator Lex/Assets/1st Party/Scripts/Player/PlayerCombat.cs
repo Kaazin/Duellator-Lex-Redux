@@ -12,6 +12,9 @@ public class PlayerCombat : MonoBehaviour
     public BoxCollider[] armHitboxes_L;
     public BoxCollider[] armHitboxes_R;
 
+    public Transform NRGSpawnPoint;
+    public GameObject[] fireball;
+    public float speed;
 
     void Awake ()
     {
@@ -171,5 +174,20 @@ public class PlayerCombat : MonoBehaviour
             if (h.GetComponent<DetectHit>() != null)
                 h.GetComponent<DetectHit>().hit = false;
         }
+    }
+
+    public void InstantiateNRG1()
+    {
+        GameObject NRG1 = Instantiate(fireball[0], NRGSpawnPoint.position, NRGSpawnPoint.rotation);
+
+        NRG1.GetComponent<Rigidbody>().AddForce(NRGSpawnPoint.forward * speed, ForceMode.Impulse);
+
+    }
+    public void InstantiateNRG2()
+    {
+        GameObject NRG2 = Instantiate(fireball[1], NRGSpawnPoint.position, NRGSpawnPoint.rotation);
+
+        NRG2.GetComponent<Rigidbody>().AddForce(NRGSpawnPoint.forward * speed, ForceMode.Impulse);
+
     }
 }

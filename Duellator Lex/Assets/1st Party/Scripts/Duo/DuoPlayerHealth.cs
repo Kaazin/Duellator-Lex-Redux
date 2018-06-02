@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class DuoPlayerHealth : MonoBehaviour
 {
     public float maxHealth;
@@ -10,13 +10,24 @@ public class DuoPlayerHealth : MonoBehaviour
     public bool isDead;
     public Animator anim;
     public GameObject[] fighters;
-
+    public bool isP1;
     public FighterSwitch fSwitch;
+
+    Slider healthBar;
     // Use this for initialization
     void Awake()
     {
         //assign current health to maxhealth and assign the references
         currentHealth = maxHealth;
+
+        if (isP1)
+            healthBar = GameObject.Find("P1HUD").GetComponentInChildren<Slider>();
+        else
+            healthBar = GameObject.Find("P2HUD").GetComponentInChildren<Slider>();
+
+        healthBar.value = maxHealth;
+
+
     }
 
     void Start()
@@ -29,6 +40,8 @@ public class DuoPlayerHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        healthBar.value = currentHealth;
+
         if (Input.GetKeyDown(KeyCode.O))
             TakeDamage(10, time, multiplier);
 
@@ -66,6 +79,8 @@ public class DuoPlayerHealth : MonoBehaviour
             fighters[fSwitch.currentFighterIndex].GetComponentInChildren<Animator>().SetTrigger("Die");
             GetComponent<FighterSwitch>().enabled = false;
             GetComponent<DuoPlayerMovement>().enabled = false;
+
+            GetComponent<Rigidbody>().isKinematic = true;
         }
     }
 

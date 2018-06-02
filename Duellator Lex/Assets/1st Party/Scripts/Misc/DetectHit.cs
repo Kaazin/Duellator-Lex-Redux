@@ -7,7 +7,7 @@ public class DetectHit : MonoBehaviour
     public bool hit = false;
     public GameObject character;
     public bool player = true;
-
+    public string name;
 	// Use this for initialization
 	void Start () {
 		
@@ -24,45 +24,81 @@ public class DetectHit : MonoBehaviour
 	{
         if(col.transform.root.tag != this.transform.root.tag && col.transform.tag == "Hurtbox" && !hit)
         {
-            PlayerHealth playerHealth = col.GetComponentInParent<PlayerHealth>();
-            DuoPlayerHealth duoPlayerHealth = col.GetComponentInParent<DuoPlayerHealth>();
-
-            if (duoPlayerHealth != null)
-                duoPlayerHealth.TakeDamage(100, 1, 1);
-            else if (playerHealth != null)
+            if (col.transform.root.name != name)
             {
-                Debug.Log(playerHealth.gameObject.name);
-                playerHealth.TakeDamage(10, 1, 1);
+                PlayerHealth playerHealth = col.GetComponentInParent<PlayerHealth>();
+                DuoPlayerHealth duoPlayerHealth = col.GetComponentInParent<DuoPlayerHealth>();
+
+                if (duoPlayerHealth != null)
+                    duoPlayerHealth.TakeDamage(10, 1, 1);
+                else if (playerHealth != null)
+                {
+                    Debug.Log(playerHealth.gameObject.name);
+                    playerHealth.TakeDamage(10, 1, 1);
+                }
+            }
+                
+                //Debug.Log(3);
+
+                if (!player)
+                {
+                    if (transform.root.tag != "VFX")
+                    {
+                        character.GetComponentInChildren<EnemyAI>().DisableLArmBoxes();
+                        character.GetComponentInChildren<EnemyAI>().DisableRArmBoxes();
+                        character.GetComponentInChildren<EnemyAI>().DisableLLegBoxes();
+                        character.GetComponentInChildren<EnemyAI>().DisableRLegBoxes();
+                    }
+
+                else if (col.transform.root.name != name)
+                     {
+                        GetComponent<SphereCollider>().enabled = false;
+                     }
+                }
+                else
+                {
+                    if (GetComponentInParent<EnemyAI>() != null)
+                        GetComponentInParent<EnemyAI>().attkHit = true;
+                    if (transform.root.tag != "VFX")
+                    {
+                        character.GetComponentInChildren<PlayerCombat>().DisableLArmBoxes();
+                        character.GetComponentInChildren<PlayerCombat>().DisableRArmBoxes();
+                        character.GetComponentInChildren<PlayerCombat>().DisableLLegBoxes();
+                        character.GetComponentInChildren<PlayerCombat>().DisableRLegBoxes();
+                    }
+                else if(col.transform.root.name != name)
+                {
+                    GetComponent<SphereCollider>().enabled = false;
+                }
+
+                }
+
+                hit = true;
+
+                hit = false;
+
             }
 
-            //Debug.Log(3);
-
-            if (!player)
-            {
-                character.GetComponentInChildren<EnemyAI>().DisableLArmBoxes();
-                character.GetComponentInChildren<EnemyAI>().DisableRArmBoxes();
-                character.GetComponentInChildren<EnemyAI>().DisableLLegBoxes();
-                character.GetComponentInChildren<EnemyAI>().DisableRLegBoxes();
-            }
             else
             {
-                if(GetComponentInParent<EnemyAI>() != null)
-                GetComponentInParent<EnemyAI>().attkHit = true;
-                
-                character.GetComponentInChildren<PlayerCombat>().DisableLArmBoxes();
-                character.GetComponentInChildren<PlayerCombat>().DisableRArmBoxes();
-                character.GetComponentInChildren<PlayerCombat>().DisableLLegBoxes();
-                character.GetComponentInChildren<PlayerCombat>().DisableRLegBoxes();
+                PlayerHealth playerHealth = col.GetComponentInParent<PlayerHealth>();
+                DuoPlayerHealth duoPlayerHealth = col.GetComponentInParent<DuoPlayerHealth>();
+
+                if (col.transform.root.name != name)
+                {
+                    if (duoPlayerHealth != null)
+                        duoPlayerHealth.TakeDamage(10, 1, 1);
+                    else if (playerHealth != null)
+                    {
+                        playerHealth.TakeDamage(10, 1, 1);
+                    }
+                }
+
+                Destroy(this);
             }
-
-            hit = true;
-
-            hit = false;
-
-
 
         }
 
         //Debug.Log(1);
-	}
 }
+

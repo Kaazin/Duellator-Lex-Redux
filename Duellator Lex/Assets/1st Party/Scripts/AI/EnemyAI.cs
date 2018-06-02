@@ -63,6 +63,8 @@ public class EnemyAI : MonoBehaviour
     PlayerHealth health;
     public int attackTimes;
 
+    float retreatTimer;
+    public float retreatTime;
 
     public float minMargin, maxMargin;  //the minimum and maximum offset margins for the ai and player to determine if the ai should be playing neutral
    
@@ -80,7 +82,12 @@ public class EnemyAI : MonoBehaviour
             if (p1.GetComponent<DuoPlayerHealth>().currentHealth > 0)
                 Main();
             else
+            {
+                anim.SetTrigger("Won");
+                anim.SetLayerWeight(1, 1);
+
                 GetComponent<EnemyAI>().enabled = false;
+            }
         }
        
         else if (!p1.GetComponent<isDuo>().Duo)
@@ -88,7 +95,14 @@ public class EnemyAI : MonoBehaviour
             if (p1.GetComponent<PlayerHealth>().currentHealth > 0)
                 Main();
             else
+            {
+                anim.SetTrigger("Won");
+                anim.SetLayerWeight(1, 1);
+
+
                 GetComponent<EnemyAI>().enabled = false;
+            }
+                
         }
             
     }
@@ -197,24 +211,40 @@ public class EnemyAI : MonoBehaviour
             StartCoroutine(Attack(timeRNG));
 
         }
-
+        if (GetComponent<PlayerHealth>().currentHealth < GetComponent<PlayerHealth>().maxHealth / 2 && retreatTimer < retreatTime)
+        {
+            Retreat();
+            retreatTimer += Time.deltaTime;
         }
+        else
+        {
+            if (Vector3.Distance(p1.position, transform.position) >= stopDistance)
+            {
+                Chase();
+            }
+
+            else if (Vector3.Distance(p1.position, transform.position) <= stopDistance && health.currentHealth > 0)
+
+            {
+                StartCoroutine(Attack(timeRNG));
+
+            }
+        }
+
+       }
 
    
 
     void Chase()
     {
-        if (attk)
-            return;
         rb.velocity = transform.rotation * direction;
     }
 
     void Retreat()
     {
-        if (attk)
-            return;
 
         rb.velocity = transform.rotation * -direction;
+
 
     }
 
@@ -262,6 +292,7 @@ public class EnemyAI : MonoBehaviour
         Debug.Log("Attack");
 
         attkRNG = Random.Range(0, 50);
+        if(timeRNG < 3 || timeRNG > 5)
         timeRNG = Random.Range(3, 5);
         yield return new WaitForSeconds(timeRNG);
         if (attackTimes <= 3)

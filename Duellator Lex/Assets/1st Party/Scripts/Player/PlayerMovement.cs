@@ -99,6 +99,32 @@ public class PlayerMovement : MonoBehaviour
 
     void Main()
     {
+        if (p2.GetComponent<isDuo>().Duo)
+        {
+            if (p2.GetComponent<DuoPlayerHealth>().currentHealth > 0)
+                Main();
+            else
+            {
+                anim.SetTrigger("Won");
+                anim.SetLayerWeight(1, 1);
+
+                GetComponent<EnemyAI>().enabled = false;
+            }
+        }
+        else if (!p2.GetComponent<isDuo>().Duo)
+        {
+            if (p2.GetComponent<PlayerHealth>().currentHealth > 0)
+                Main();
+            else
+            {
+                anim.SetTrigger("Won");
+                anim.SetLayerWeight(1, 1);
+
+
+                GetComponent<PlayerMovement>().enabled = false;
+            }
+
+        }
         //the distance between the player and the enemy
         Vector3 dir = p2.position - transform.position;
 

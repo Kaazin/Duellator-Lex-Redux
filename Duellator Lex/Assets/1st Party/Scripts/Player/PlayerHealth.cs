@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class PlayerHealth : MonoBehaviour
 {
     public float maxHealth;
@@ -9,13 +9,23 @@ public class PlayerHealth : MonoBehaviour
     public float time, multiplier;  //the base time and mulitplier of hitstun
     public bool isDead;
     public Animator anim;
-
+    public bool isP1;
     public FighterSwitch fSwitch;
-	// Use this for initialization
+    // Use this for initialization
+
+    Slider healthBar;
+
 	void Awake ()
     {
         //assign current health to maxhealth and assign the references
         currentHealth = maxHealth;
+        if (isP1)
+            healthBar = GameObject.Find("P1HUD").GetComponentInChildren<Slider>();
+        else
+            healthBar = GameObject.Find("P2HUD").GetComponentInChildren<Slider>();
+
+        healthBar.value = maxHealth;
+
 	}
 
     void Start()
@@ -26,8 +36,8 @@ public class PlayerHealth : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-        if(Input.GetKeyDown(KeyCode.O))
-            TakeDamage(10, time, multiplier);
+        healthBar.value = currentHealth;
+
 
 
         //if (currentHealth <= 0 && !isDead)
@@ -66,7 +76,7 @@ public class PlayerHealth : MonoBehaviour
             else
                 GetComponent<EnemyAI>().enabled = false;
 
-            GetComponent<Rigidbody>().isKinematic = false;
+            GetComponent<Rigidbody>().isKinematic = true;
 
 
         }

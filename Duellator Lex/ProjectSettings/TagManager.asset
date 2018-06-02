@@ -8,6 +8,7 @@ TagManager:
   - Hurtbox
   - P1
   - P2
+  - VFX
   layers:
   - Default
   - TransparentFX
