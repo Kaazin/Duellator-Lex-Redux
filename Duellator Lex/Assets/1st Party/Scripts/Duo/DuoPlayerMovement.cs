@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class DuoPlayerMovement : MonoBehaviour
 {
     public Vector3 direction;  //the player's direction of movment
 
@@ -10,12 +10,13 @@ public class PlayerMovement : MonoBehaviour
 
     public float jumpSpeed;   //the speed the player should Jump
 
+    public GameObject[] fighters;
 
     Rigidbody rb;       //the rigidbody attached to the player
 
     Animator anim;      //the animator attached to the player
 
-    Vector3 prevPos, fwd,newPos;    //the previous position of the player, forward vector and new position of the player
+    Vector3 prevPos, fwd, newPos;    //the previous position of the player, forward vector and new position of the player
 
     //public Transform enemy;
 
@@ -24,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     public float gravity = 9.8f;    //the gravity value the player has
 
     public float fallSpeed;         //how fast the player falls
-        
+
     float distToGround;             //the distane of the raycast from the bottom of the player
 
     float normSpeed;                //the normal speed of the player
@@ -33,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
 
     float baseGravity;              //the starting gravit of the player
 
-    public enum fallSpd {floaty, normal, fastfaller};
+    public enum fallSpd { floaty, normal, fastfaller };
 
     public fallSpd fallRate;    //enum variable of fallspeed
 
@@ -46,6 +47,8 @@ public class PlayerMovement : MonoBehaviour
     Transform p2;
     public float time = 0.5f;
     public bool IsGrounded;
+
+    FighterSwitch fSwitch;
 
     void Awake()
     {
@@ -77,7 +80,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-	void OnCollisionExit(Collision col)
+    void OnCollisionExit(Collision col)
     {
         //when we leave the floor wea re no longer grounded
         if (col.gameObject.name == "Floor")
@@ -99,7 +102,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Main()
     {
-        //the distance between the player and the enemy
+       //the distance between the player and the enemy
         Vector3 dir = p2.position - transform.position;
 
         //zero out the vector's Y value
@@ -118,36 +121,70 @@ public class PlayerMovement : MonoBehaviour
 
 
         //if the player is moving back wards play the walking backwards animation
-        if (Vector3.Dot(transform.forward, direction) > 0)
-            anim.SetBool("WalkB", true);
+        if (Vector3.Dot(transform.forward, direction) < 0)
+        {
+            if (fSwitch.fighters[0].activeSelf)
+                fSwitch.fighters[0].GetComponentInChildren<Animator>().SetBool("WalkB", true);
+            
+            if (fSwitch.fighters[1].activeSelf)
+                fSwitch.fighters[1].GetComponentInChildren<Animator>().SetBool("WalkB", true);
+        }
+            
         // otherwise stop the walking backwards animation
         else
-            anim.SetBool("WalkB", false);
-
+        {
+            if (fSwitch.fighters[0].activeSelf)
+                fSwitch.fighters[0].GetComponentInChildren<Animator>().SetBool("WalkB", false);
+            
+            if (fSwitch.fighters[1].activeSelf)
+                fSwitch.fighters[1].GetComponentInChildren<Animator>().SetBool("WalkB", false);
+        }
         //if the player is moving forward play the walking forward animation
-        if (Vector3.Dot(transform.forward, direction) < 0)
-            anim.SetBool("WalkF", true);
-        //otherwise stop the walking backwards animation
-        else
-            anim.SetBool("WalkF", false);
+        if (Vector3.Dot(transform.forward, direction) > 0)
+        {
+            if (fSwitch.fighters[0].activeSelf)
+                fSwitch.fighters[0].GetComponentInChildren<Animator>().SetBool("WalkF", true);
+
+            if (fSwitch.fighters[1].activeSelf)
+                fSwitch.fighters[1].GetComponentInChildren<Animator>().SetBool("WalkF", true);
+        }
+                else
+        {
+            if (fSwitch.fighters[0].activeSelf)
+                fSwitch.fighters[0].GetComponentInChildren<Animator>().SetBool("WalkF", false);
+            
+            if (fSwitch.fighters[1].activeSelf)
+                fSwitch.fighters[1].GetComponentInChildren<Animator>().SetBool("WalkF", false);
+        }
 
         //assign a value to the direction vector
         direction = new Vector3(moveH, direction.y, 0);
 
         //make the player move toward the direction vector relative to his rotation
-        rb.velocity = transform.rotation * direction;
+        rb.velocity =  direction;
 
         if (IsGrounded && Input.GetButtonDown("Jump"))
         {
-            anim.SetBool("Jump", true);
+
+            if (fSwitch.fighters[0].activeSelf)
+                fSwitch.fighters[0].GetComponentInChildren<Animator>().SetBool("Jump", true);
+
+            if (fSwitch.fighters[1].activeSelf)
+                fSwitch.fighters[1].GetComponentInChildren<Animator>().SetBool("Jump", true);
+                
             StartCoroutine(Jump(time));
+
         }
 
         //if the player isn't grouned add gravity and go away from the jump animation
         if (!IsGrounded)
         {
             direction.y -= gravity;
-            anim.SetBool("Jump", false);
+            if (fSwitch.fighters[0].activeSelf)
+                fSwitch.fighters[0].GetComponentInChildren<Animator>().SetBool("Jump", false);
+
+            if (fSwitch.fighters[1].activeSelf)
+                fSwitch.fighters[1].GetComponentInChildren<Animator>().SetBool("Jump", false);      
         }
         // if the player's vertical direction is less than zero reset him at zero
         else if (direction.y < 0)
@@ -175,6 +212,9 @@ public class PlayerMovement : MonoBehaviour
         distToGround = boxCol.bounds.extents.y;
 
         p2 = GameObject.FindGameObjectWithTag("P2").transform;
+
+        fSwitch = GetComponent<FighterSwitch>();
+
         if (fallRate == fallSpd.floaty)
         {
             gravity *= floaty;

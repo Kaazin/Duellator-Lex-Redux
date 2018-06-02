@@ -134,6 +134,8 @@ public class PlayerCombat : MonoBehaviour
             h.enabled = false;
             h.GetComponent<MeshRenderer>().enabled = false;
 
+            if (h.GetComponent<DetectHit>() != null)
+                h.GetComponent<DetectHit>().hit = false; 
         }
     }
     public void DisableRArmBoxes()
@@ -143,6 +145,8 @@ public class PlayerCombat : MonoBehaviour
             h.GetComponent<MeshRenderer>().enabled = false;
 
             h.enabled = false;
+            if (h.GetComponent<DetectHit>() != null)
+                h.GetComponent<DetectHit>().hit = false; 
         }
     }
     public void DisableLLegBoxes()
@@ -152,6 +156,8 @@ public class PlayerCombat : MonoBehaviour
             h.GetComponent<MeshRenderer>().enabled = false;
 
             h.enabled = false;
+            if (h.GetComponent<DetectHit>() != null)
+                h.GetComponent<DetectHit>().hit = false;
         }
     }
 
@@ -162,6 +168,8 @@ public class PlayerCombat : MonoBehaviour
             h.GetComponent<MeshRenderer>().enabled = false;
 
             h.enabled = false;
+            if (h.GetComponent<DetectHit>() != null)
+                h.GetComponent<DetectHit>().hit = false;
         }
     }
 }

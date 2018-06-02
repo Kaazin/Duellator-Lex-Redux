@@ -6,6 +6,7 @@ public class HurtboxVisualizer : MonoBehaviour
 {
     BoxCollider[] hurtboxes; //hitboxes attached to this character
 
+    bool showingHurtboxes;
 	// Use this for initialization
 	void Awake ()
     {
@@ -17,7 +18,10 @@ public class HurtboxVisualizer : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-        if (Input.GetKey(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P))
+            showingHurtboxes = !showingHurtboxes;
+
+        if (showingHurtboxes)
             ShowHurtboxes();
         else
             HideHurtboxes();
